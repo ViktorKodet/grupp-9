@@ -143,16 +143,18 @@ async function sendOrder(form) {
 
   product.forEach((element) =>
     products.push({
-      product: { id: element.id },
+      // product: {
+      productId: element.id,
       quantity: element.quantityInCart,
+      // },
     })
   );
 
   axios
     .post(
-      "https://projekt-grupp9.herokuapp.com/order/add",
+      "https://localhost:7147/api/CustomerOrder",
       {
-        date: new Date(),
+        //date: new Date(),
         customer: {
           firstName: $firstname,
           lastName: $lastname,
@@ -165,9 +167,10 @@ async function sendOrder(form) {
         products: products,
       },
       { headers: { "Content-Type": "application/json" } }
+      //, "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" //TODO
     )
     .then((res) => {
-      if (res.data == "Order tillagd") {
+      if (res.status == 200) {
         //sendEmail($firstname, $email, products, $adress, $zipCode, $city);
         form.submit();
       } else $alert.text("* Något gick fel");

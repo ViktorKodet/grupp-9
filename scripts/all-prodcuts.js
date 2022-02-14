@@ -4,31 +4,35 @@ var cartArray = JSON.parse(localStorage.getItem("productsInCart")) || [];
 const getCategoryId = sessionStorage.getItem("categoryId") || 0;
 
 function renderAllProducts() {
-  fetch("https://projekt-grupp9.herokuapp.com/product/all/active").then(function (
-    response
-  ) {
-    if (response.status !== 200) {
-      console.log("Något gick fel. Status kod: " + response.status);
-      return;
-    }
+  try {
+    fetch("https://localhost:7147/api/Product/all/active").then(function (
+      response
+    ) {
+      if (response.status !== 200) {
+        console.log("Något gick fel. Status kod: " + response.status);
+        return;
+      }
 
-    response.json().then(function (data) {
-      // Renderar ut produkter
-      data.forEach((element) => {
-        if (getCategoryId == 0) {
-          product(element);
-        } else {
-          if (getCategoryId == element.category.id) product(element);
-        }
+      response.json().then(function (data) {
+        // Renderar ut produkter
+        data.forEach((element) => {
+          if (getCategoryId == 0) {
+            product(element);
+          } else {
+            if (getCategoryId == element.category.id) product(element);
+          }
+        });
+        sessionStorage.setItem("products", JSON.stringify(objectArray));
       });
-      sessionStorage.setItem("products", JSON.stringify(objectArray));
     });
-  });
-  fetchAllCategories();
+    fetchAllCategories();
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 function fetchAllCategories() {
-  fetch("https://projekt-grupp9.herokuapp.com/category/all/active").then(function (
+  fetch("https://localhost:7147/api/Category/all/active").then(function (
     response
   ) {
     if (response.status !== 200) {
